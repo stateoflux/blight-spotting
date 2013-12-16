@@ -1,0 +1,46 @@
+html, body, #map-canvas {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #efefef;
+  font-family: Helvetica, Arial, sans-serif;
+}
+h2 {
+  position: fixed;
+  width: 100%;
+  z-index: 100;
+  background-color: #FFF;
+  color: hsla(168, 76%, 36%, 1);
+  /* color: #005E00; */
+  text-align: center;
+  margin: 0;
+  padding: 0.2917em 0;   /* 8px/24px */
+  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.33);
+}
+.container-main {
+  padding-top: 43px; 
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+.stations, .stations svg {
+  position: absolute;
+}
+
+.stations svg {
+  width: 60px;
+  height: 20px;
+  padding-right: 100px;
+  font: 10px sans-serif;
+}
+
+.stations circle {
+  fill: brown;
+  stroke: black;
+  stroke-width: 1.5px;
+}
