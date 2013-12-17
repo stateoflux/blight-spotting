@@ -91,6 +91,8 @@ function addIssues(map, issues) {
           description: d.value.description,
           created_at: d.value.created_at
         });
+        // remove previous template if present
+        $('.issue-details').remove(); 
         $('#map-canvas').append(tmpl); 
         d3.select(".issue-tooltip")
           .style("left", "100px")
