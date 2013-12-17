@@ -73,7 +73,7 @@ function addIssues(map, issues) {
       // Add a circle.
       marker.append("svg:circle")
           .attr("opacity", 0.0)
-          .attr("r", 6)
+          .attr("r", 7)
           .attr("cx", padding)
           .attr("cy", padding)
           .transition()
@@ -99,10 +99,16 @@ function addIssues(map, issues) {
         // Can I add tooltips to overlay via jquery?
         // wam: YES!!!!!!
         $('.issues').append(tmpl);
-        console.log(d3.select(".issue-details").attr("left"));
+        console.log(d3.select(".issue-details").style("top"));
+
+        // more hacky ass code
+        // --------------------------------------------------------------------
+        var coords = new google.maps.LatLng(d.value.lat, d.value.lng);
+        var pixels = projection.fromLatLngToDivPixel(coords);
+        // --------------------------------------------------------------------
         d3.select(".issue-details")
-          .style("left", "100px")
-          .style("top",  "100px")
+          .style("left", (pixels.x - 125) + "px")
+          .style("top",  (pixels.y - 100) + "px")
           .classed("hidden", false);
         console.log("I've been clicked!", d);
       }); // end of marker onclick handler

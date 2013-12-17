@@ -42,7 +42,11 @@ h2 {
 .issues circle {
   fill: rgba(211, 84, 0,0.8);
   stroke: rgba(192, 57, 43, 1.0);
-  stroke-width: 2px; */
+  stroke-width: 2px; 
+}
+.issues circle:hover {
+  fill: rgba(192, 57, 43, 1.0);
+  cursor: pointer;
 }
 
 .hidden {
@@ -60,10 +64,10 @@ h2 {
 .issue-details {
   position: absolute;
   background-color: #fff;
-  width: 275px;
+  width: 255px;
   border-radius: 2px;
   display: block;
-  font-size: 13px;
+  font-size: 14px;
   color: #666;
   padding: 0 13px 0 13px;
 }
