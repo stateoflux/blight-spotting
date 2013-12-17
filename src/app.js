@@ -76,11 +76,11 @@ function addIssues(map, issues) {
           .attr("cy", padding);
 
       // Add a label.
-      marker.append("svg:text")
+      /* marker.append("svg:text")
           .attr("x", padding + 7)
           .attr("y", padding)
           .attr("dy", ".31em")
-          .text(function(d) { return d.key; });
+          .text(function(d) { return d.key; }); */
 
       function transform(d) {
         d = new google.maps.LatLng(d.value.lat, d.value.lng);
