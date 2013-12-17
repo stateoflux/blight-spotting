@@ -40,7 +40,8 @@ h2 {
 }
 
 .stations circle {
-  fill: brown;
-  stroke: black;
-  stroke-width: 1.5px;
+  fill: #A13936;
+
+  stroke: #ccc;
+  stroke-width: 1px; */
 }

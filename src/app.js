@@ -4,7 +4,7 @@
 var initialize = function() {
   var mapOptions = {
     center: new google.maps.LatLng(37.7953637, -122.2711137),
-    zoom: 8
+    zoom: 12
   };
   var map = new google.maps.Map(document.getElementById("map-canvas"),
     mapOptions);
@@ -15,8 +15,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 // Load the station data. When the data comes back, create an overlay.
 function addStations(map) {
-  d3.json("stations.json", function(data) {
-
+  d3.json("src/issues.json", function(data) {
     // wam: what is happening here?
     // creation of a custom overlay.  overlays are objects on a map that are
     // tied to lat/long coordinates.  these objects will stay fixed on map, so will move when map is moved
@@ -59,7 +58,7 @@ function addStations(map) {
 
         // Add a circle.
         marker.append("svg:circle")
-            .attr("r", 4.5)
+            .attr("r", 6)
             .attr("cx", padding)
             .attr("cy", padding);
 
@@ -71,9 +70,10 @@ function addStations(map) {
             .text(function(d) { return d.key; });
 
         function transform(d) {
-          d = new google.maps.LatLng(d.value[1], d.value[0]);
-          d = projection.fromLatLngToDivPixel(d);
           console.log(d);
+          d = new google.maps.LatLng(d.value.lat, d.value.lng);
+          // d = new google.maps.LatLng(d.value[1], d.value[0]);
+          d = projection.fromLatLngToDivPixel(d);
           return d3.select(this)
               .style("left", (d.x - padding) + "px")
               .style("top", (d.y - padding) + "px");
