@@ -83,6 +83,7 @@ function addIssues(map, issues) {
       // Terribly hacky code!!!
       // wam: for some reason, the tooltip code only seems to work within
       // the draw method.
+      // ----------------------------------------------------------------------
       var circles = d3.selectAll("svg");
       console.log(circles);
       circles.on("click", function(d) {
@@ -94,15 +95,18 @@ function addIssues(map, issues) {
         });
         // remove previous template if present
         $('.issue-details').remove(); 
-        // can i use jquery to insert template in the div above?  
-        $('#map-canvas').append(tmpl);
+
+        // Can I add tooltips to overlay via jquery?
+        // wam: YES!!!!!!
+        $('.issues').append(tmpl);
+        console.log(d3.select(".issue-details").attr("left"));
         d3.select(".issue-details")
-          .style("left", (d.x) + "px")
-          .style("top", (d.y + 30) + "px")
+          .style("left", "100px")
+          .style("top",  "100px")
           .classed("hidden", false);
         console.log("I've been clicked!", d);
       }); // end of marker onclick handler
-
+      // ----------------------------------------------------------------------
       function transform(d) {
         d = new google.maps.LatLng(d.value.lat, d.value.lng);
         d = projection.fromLatLngToDivPixel(d);
