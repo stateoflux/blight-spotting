@@ -84,3 +84,38 @@ h2 {
 .created_at {
   color: rgba(0, 0, 0, 0.4);
 }
+
+#timeline {
+  position: absolute;
+  top: 650px;
+  left: 45px;
+  background-color: rgba(255, 255, 255, 0.9);
+  width: 1000px;
+  height: 100px;
+  border-radius: 2px;
+  display: block;
+}
+
+
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
+.axis {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
