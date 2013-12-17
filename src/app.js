@@ -55,8 +55,7 @@ function addIssues(map, issues) {
   console.log(issues);
   overlay.onAdd = function() {
     var layer = d3.select(this.getPanes().overlayImage).append("div")
-    // var layer = d3.select(this.getPanes().overlayLayer).append("div")
-        .attr("class", "issues");
+      .attr("class", "issues");
 
     overlay.draw = function() {
       console.log("draw method called", this);
@@ -81,11 +80,13 @@ function addIssues(map, issues) {
           .duration(500)
           .attr("opacity", 1.0);
 
+      // Terribly hacky code!!!
+      // wam: for some reason, the tooltip code only seems to work within
+      // the draw method.
       var circles = d3.selectAll("svg");
       console.log(circles);
       circles.on("click", function(d) {
         var issueTemplate = Handlebars.compile(bs.config.$issue_tooltip.html());
-        // TODO: investigate how to retrieve issue data from selected marker.
         var tmpl = issueTemplate({
           address: d.value.address,
           description: d.value.description,
@@ -93,14 +94,14 @@ function addIssues(map, issues) {
         });
         // remove previous template if present
         $('.issue-details').remove(); 
-        $('#map-canvas').append(tmpl); 
-        d3.select(".issue-tooltip")
-          .style("left", "100px")
-          .style("top", "100px")
+        // can i use jquery to insert template in the div above?  
+        $('#map-canvas').append(tmpl);
+        d3.select(".issue-details")
+          .style("left", (d.x) + "px")
+          .style("top", (d.y + 30) + "px")
           .classed("hidden", false);
         console.log("I've been clicked!", d);
-
-      })
+      }); // end of marker onclick handler
 
       function transform(d) {
         d = new google.maps.LatLng(d.value.lat, d.value.lng);

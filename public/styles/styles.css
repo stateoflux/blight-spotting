@@ -67,9 +67,7 @@ h2 {
   display: block;
   font-size: 13px;
   color: #666;
-  border-top: 1px #ccc solid;
   padding: 0 13px 0 13px;
-  border-radius: 0 0 2px 2px;
 }
 .issue-details p {
   max-width: 100%;
