@@ -40,8 +40,7 @@ h2 {
 }
 
 .issues circle {
-  fill: rgba(192, 57, 43, 0.8);
-
-  stroke: #555;
-  stroke-width: 1px; */
+  fill: rgba(211, 84, 0,0.8);
+  stroke: rgba(192, 57, 43, 1.0);
+  stroke-width: 2px; */
 }

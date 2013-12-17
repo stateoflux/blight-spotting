@@ -5,7 +5,6 @@ var bs = {
   config: {
     scf_list_url: [
       "http://seeclickfix.com/api/issues.json?",
-      // "at=Oakland,+CA",
       "lat=37.7953637",
       "&lng=-122.2711137",
       "&zoom=10",
@@ -14,7 +13,8 @@ var bs = {
       "&page=1",
       "&num_results=200",
       "&search=illegal+dumping",
-      "&status[Closed]=true",
+      "&status[Open]=true",
+      "&status[Acknowledged]=true",
       "&sort=issues.created_at",
       "&callback=?"
     ]
@@ -99,8 +99,9 @@ function addIssues(map, issues) {
 function addIssuesToCrossfilter(issues) {
   var issue = crossfilter(issues);
   var all = issue.groupAll();
-  var zipcode = issue.dimension(function(d) { return d.address.slice(-10, -5); });
-  var zipcodes = zipcode.group(function(d) { });
+  var issuesBySummary = issue.dimension(function(d) { return d.summary; });
+  var summaries = issuesBySummary.group();
+  console.log(summaries.top(10));
 };
 
 
