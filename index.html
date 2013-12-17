@@ -24,10 +24,18 @@
     </div>
     <div class="container-main">
       <div id="map-canvas"></div>
+      <script id="issue-tooltip" class="hidden" type="text/x-handlebars-template" >
+        <div class="issue-details">
+          <p class="address">{{address}}</p>
+          <p class="desc">{{description}}</p>
+          <p class="created_at">Submitted {{created_at}}</p> 
+        </div>
+      </script>
     </div>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIaQ1AgczP6-UZzndO35dXuCjvDu9NSmE&sensor=true"></script>
     <script src="http://mbostock.github.com/d3/d3.js?1.29.1"></script>
     <script src="bower_components/jquery/jquery.min.js"></script>
+    <script src="bower_components/handlebars/handlebars.js"></script>
     <script src="vendor/crossfilter/crossfilter.min.js"></script>
     <script src="src/app.js"></script>
 

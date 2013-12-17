@@ -17,7 +17,8 @@ var bs = {
       "&status[Acknowledged]=true",
       "&sort=issues.created_at",
       "&callback=?"
-    ]
+    ],
+    $issue_tooltip: $('#issue-tooltip'),
   },
 
   getIssues: function() {
@@ -82,8 +83,21 @@ function addIssues(map, issues) {
 
       var circles = d3.selectAll("svg");
       console.log(circles);
-      circles.on("click", function() {
-        console.log("I've been clicked!");
+      circles.on("click", function(d) {
+        var issueTemplate = Handlebars.compile(bs.config.$issue_tooltip.html());
+        // TODO: investigate how to retrieve issue data from selected marker.
+        var tmpl = issueTemplate({
+          address: d.value.address,
+          description: d.value.description,
+          created_at: d.value.created_at
+        });
+        $('#map-canvas').append(tmpl); 
+        d3.select(".issue-tooltip")
+          .style("left", "100px")
+          .style("top", "100px")
+          .classed("hidden", false);
+        console.log("I've been clicked!", d);
+
       })
 
       function transform(d) {

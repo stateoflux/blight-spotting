@@ -44,3 +44,43 @@ h2 {
   stroke: rgba(192, 57, 43, 1.0);
   stroke-width: 2px; */
 }
+
+.hidden {
+  display: none;
+}
+
+.issue-tooltip {
+  position: absolute;
+  background-color: #fff;
+  width: 275px;
+  border-radius: 2px;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);  /* <offset-x> <offset-y> <blur-radius>? <spread-radius>? <color>? */
+}
+.issue-details {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  background-color: #fff;
+  width: 275px;
+  border-radius: 2px;
+  display: block;
+  font-size: 13px;
+  color: #666;
+  border-top: 1px #ccc solid;
+  padding: 0 13px 0 13px;
+  border-radius: 0 0 2px 2px;
+}
+.issue-details p {
+  max-width: 100%;
+  margin: 8px 0;
+}
+.created_at {
+  font-weight: 300;
+}
+.address {
+  color: hsla(193, 63%, 42%, 1);
+}
+.created_at {
+  color: rgba(0, 0, 0, 0.4);
+}
