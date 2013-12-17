@@ -28,18 +28,18 @@ h2 {
   margin: 0;
 }
 
-.stations, .stations svg {
+.issues, .issues svg {
   position: absolute;
 }
 
-.stations svg {
+.issues svg {
   width: 60px;
   height: 20px;
   padding-right: 100px;
   font: 10px sans-serif;
 }
 
-.stations circle {
+.issues circle {
   fill: #A13936;
 
   stroke: #ccc;
