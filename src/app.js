@@ -142,41 +142,37 @@ function addIssuesToCrossfilter(issues) {
   var summary = issue.dimension(function(d) { return d.summary; });
   var summaries = summary.group();
   // how do I sort this grouping by date?
-  console.log(dates.top(30)); 
-  console.log(statuses.top(10));
-  console.log(summaries.top(10));
+  // console.log(dates.top(30)); 
+  // console.log(statuses.top(10));
+  // console.log(summaries.top(10));
   barChart(dates.top(30));
 };
 
 function barChart(dataset) {
+  console.log(dataset);
 //Width and height
-
   var margin = {top: 10, right: 10, bottom: 30, left: 30};
   var w = 1000 - margin.left - margin.right;
   var h = 100 - margin.top - margin.bottom;
-  var barPadding = 1;
-
-  var x = d3.time.scale();
-    x.domain([new Date(2013, 11, 17), new Date(2013, 12, 17)])
-      .rangeRound([0, 10 * 90])
+  // var barPadding = 1;
 
   // Scales and Axes
-  /* var x = d3.scale.ordinal()
-    .rangeRoundBands([0, width], .1); */
+  var x = d3.time.scale()
+    .domain([new Date(2013, 10, 17), new Date(2013, 11, 17)])
+    .rangeRound([0, 10 * 90])
 
-  var y = d3.scale.linear();
-    y.domain([0, d3.max(dataset, function(d) { return d.value; })])
-      .range([h, 0]);
+  /* var y = d3.scale.linear()
+    .domain([0, d3.max(dataset, function(d) { return d.value; })])
+    .range([h, 0]); */
 
-  var xAxis = d3.svg.axis();
-  xAxis
+  var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom");
 
-  var yAxis = d3.svg.axis()
+  /* var yAxis = d3.svg.axis()
       .scale(y)
       .orient("left")
-      .ticks(10, "%");
+      .ticks(10); */
   
   //Create SVG element
   var svg = d3.select("#timeline").append("svg")
@@ -185,12 +181,16 @@ function barChart(dataset) {
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+
+
+  // x-axis
   svg.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + h + ")")
     .call(xAxis);
 
-  svg.append("g")
+  // y-axis
+  /* svg.append("g")
       .attr("class", "y axis")
       .call(yAxis)
     .append("text")
@@ -198,62 +198,52 @@ function barChart(dataset) {
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Issues Reported");
+      .text("Issues Reported"); */
+
+  svg.selectAll(".bar")
+      .data(dataset)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.key); })
+      .attr("width", x.range()[1])
+      .attr("y", function(d) { return y(d.value); })
+      .attr("height", function(d) { return h - y(d.value); });
+
 }
 
 
-/* var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+//Width and height
+      var w = 500;
+      var h = 100;
+      var barPadding = 1;
+      
+      var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
+              11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
+      
+      //Create SVG element
+      var svg = d3.select("body")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
 
-var x = d3.scale.ordinal()
-    .rangeRoundBands([0, width], .1);
+      svg.selectAll("rect")
+         .data(dataset)
+         .enter()
+         .append("rect")
+         .attr("x", function(d, i) {
+            return i * (w / dataset.length);
+         })
+         .attr("y", function(d) {
+            return h - (d * 4);
+         })
+         .attr("width", w / dataset.length - barPadding)
+         .attr("height", function(d) {
+            return d * 4;
+         })
+         .attr("fill", "teal");
 
-var y = d3.scale.linear()
-    .range([height, 0]);
 
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
 
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left")
-    .ticks(10, "%");
-
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-d3.tsv("data.tsv", type, function(error, data) {
-  x.domain(data.map(function(d) { return d.letter; }));
-  y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
-
-  svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
-
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Frequency");
-
-  svg.selectAll(".bar")
-      .data(data)
-    .enter().append("rect")
-      .attr("class", "bar")
-      .attr("x", function(d) { return x(d.letter); })
-      .attr("width", x.rangeBand())
-      .attr("y", function(d) { return y(d.frequency); })
-      .attr("height", function(d) { return height - y(d.frequency); }); */
 
 
 
