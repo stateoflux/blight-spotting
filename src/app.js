@@ -14,6 +14,7 @@ var bs = {
       "&page=1",
       "&num_results=200",
       "&search=illegal+dumping",
+      "&status[Closed]=true",
       "&sort=issues.created_at",
       "&callback=?"
     ]
@@ -36,6 +37,7 @@ var initialize = function() {
 
   gettingIssues.then(function(data) {
     issues = data;
+    addIssuesToCrossfilter(issues);
     addIssues(map, issues);
   }, function() {
     console.log("Ajax error!");
@@ -49,6 +51,7 @@ function addIssues(map, issues) {
   var overlay = new google.maps.OverlayView();
 
   // Add the container when the overlay is added to the map.
+  console.log(issues);
   overlay.onAdd = function() {
     var layer = d3.select(this.getPanes().overlayLayer).append("div")
         .attr("class", "issues");
@@ -82,7 +85,7 @@ function addIssues(map, issues) {
       function transform(d) {
         d = new google.maps.LatLng(d.value.lat, d.value.lng);
         d = projection.fromLatLngToDivPixel(d);
-        console.log(d);
+        // console.log(d);
         return d3.select(this)
             .style("left", (d.x - padding) + "px")
             .style("top", (d.y - padding) + "px");
@@ -92,5 +95,13 @@ function addIssues(map, issues) {
   // Bind our overlay to the map…
   overlay.setMap(map);
 }
+
+function addIssuesToCrossfilter(issues) {
+  var issue = crossfilter(issues);
+  var all = issue.groupAll();
+  var zipcode = issue.dimension(function(d) { return d.address.slice(-10, -5); });
+  var zipcodes = zipcode.group(function(d) { });
+};
+
 
 
