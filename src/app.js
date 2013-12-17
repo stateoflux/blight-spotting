@@ -4,15 +4,17 @@
 var bs = {
   config: {
     scf_list_url: [
-      "http://seeclickfix.com/api/issues.json",
-      "?at=Oakland,+CA",
+      "http://seeclickfix.com/api/issues.json?",
+      // "at=Oakland,+CA",
+      "lat=37.7953637",
+      "&lng=-122.2711137",
       "&zoom=10",
       "&start=168",
       "&end=0",
       "&page=1",
-      "&num_results=100",
+      "&num_results=200",
       "&search=illegal+dumping",
-      "issues.created_at",
+      "&sort=issues.created_at",
       "&callback=?"
     ]
   },
