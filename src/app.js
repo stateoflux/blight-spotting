@@ -53,7 +53,8 @@ function addIssues(map, issues) {
   // Add the container when the overlay is added to the map.
   console.log(issues);
   overlay.onAdd = function() {
-    var layer = d3.select(this.getPanes().overlayLayer).append("div")
+    var layer = d3.select(this.getPanes().overlayImage).append("div")
+    // var layer = d3.select(this.getPanes().overlayLayer).append("div")
         .attr("class", "issues");
 
     overlay.draw = function() {
@@ -71,16 +72,19 @@ function addIssues(map, issues) {
 
       // Add a circle.
       marker.append("svg:circle")
+          .attr("opacity", 0.0)
           .attr("r", 6)
           .attr("cx", padding)
-          .attr("cy", padding);
+          .attr("cy", padding)
+          .transition()
+          .duration(500)
+          .attr("opacity", 1.0);
 
-      // Add a label.
-      /* marker.append("svg:text")
-          .attr("x", padding + 7)
-          .attr("y", padding)
-          .attr("dy", ".31em")
-          .text(function(d) { return d.key; }); */
+      var circles = d3.selectAll("svg");
+      console.log(circles);
+      circles.on("click", function() {
+        console.log("I've been clicked!");
+      })
 
       function transform(d) {
         d = new google.maps.LatLng(d.value.lat, d.value.lng);
