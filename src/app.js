@@ -151,28 +151,27 @@ function addIssuesToCrossfilter(issues) {
 function barChart(dataset) {
   console.log(dataset);
 //Width and height
-  var margin = {top: 10, right: 10, bottom: 30, left: 30};
-  var w = 1000 - margin.left - margin.right;
-  var h = 100 - margin.top - margin.bottom;
-  // var barPadding = 1;
+  var margin = {top: 10, right: 10, bottom: 25, left: 30};
+  var w = 800 - margin.left - margin.right;
+  var h = 120 - margin.top - margin.bottom;
+  var barPadding = 1;
 
   // Scales and Axes
   var x = d3.time.scale()
     .domain([new Date(2013, 10, 17), new Date(2013, 11, 17)])
-    .rangeRound([0, 10 * 90])
+    .rangeRound([0, w])
 
-  /* var y = d3.scale.linear()
+  var y = d3.scale.linear()
     .domain([0, d3.max(dataset, function(d) { return d.value; })])
-    .range([h, 0]); */
+    .range([h, 0]);
 
   var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom");
 
-  /* var yAxis = d3.svg.axis()
+  var yAxis = d3.svg.axis()
       .scale(y)
       .orient("left")
-      .ticks(10); */
   
   //Create SVG element
   var svg = d3.select("#timeline").append("svg")
@@ -190,22 +189,24 @@ function barChart(dataset) {
     .call(xAxis);
 
   // y-axis
-  /* svg.append("g")
+  var yPadding = 0;
+  svg.append("g")
       .attr("class", "y axis")
+      .attr("transform", "translate(" + yPadding + ",0)")
       .call(yAxis)
     .append("text")
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Issues Reported"); */
+      .text("Issues Reported");
 
   svg.selectAll(".bar")
       .data(dataset)
     .enter().append("rect")
       .attr("class", "bar")
       .attr("x", function(d) { return x(d.key); })
-      .attr("width", x.range()[1])
+      .attr("width", w / dataset.length - barPadding)
       .attr("y", function(d) { return y(d.value); })
       .attr("height", function(d) { return h - y(d.value); });
 
