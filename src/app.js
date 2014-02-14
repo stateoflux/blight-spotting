@@ -13,7 +13,8 @@ var bs = {
       "&start=720",
       "&end=0",
       "&page=1",
-      "&num_results=10",
+      "&per_page=100",
+      "&num_results=100",
       "&search=illegal+dumping",
       "&sort=issues.created_at",
       "&callback=?"
@@ -51,7 +52,7 @@ var initialize = function() {
   var gettingIssues = bs.getIssues();
   gettingIssues.then(function(data) {
     console.log(data);
-    issues = data;
+    issues = data.issues;
     addIssuesToCrossfilter(issues);
     addIssues(map, issues);
   }, function() {
@@ -144,37 +145,36 @@ function addIssues(map, issues) {
 function addIssuesToCrossfilter(issues) {
   // console.log("addIssuesToCrossfilter", issues);
 
-  // why am I performing this datetime conversion?
-  // format of issue.created_at property is a string (02/13/2014 - 09:45PM)
-  // what timezone is seeclickfix using when making this date to string conversion??
-  // TODO: investigate the timezone seeclickfix is using
-
-
-  var ymdFormat = d3.time.format("%m/%d/%Y - %I:%M%p");
-  console.log("issue date", ymdFormat.parse(issues[0].created_at));
-  
-  /* issues.forEach(function(i) {
-    i.created_at = ymdFormat.parse(i.created_at);
-    i.updated_at = ymdFormat.parse(i.updated_at);
+  // format of issue.created_at property is in ISO8601 format (2014-02-13T15:51:14-10:00)
+  // I need to convert this string into a date object
+  issues.forEach(function(i) {
+    i.created_at = new Date(i.created_at);
+    i.updated_at = new Date(i.updated_at);
   });
 
-  var issue = crossfilter(issues);
-  var all = issue.groupAll();
-  var date = issue.dimension(function(d) { return d.created_at; });
-  var dates = date.group(d3.time.day);
-  var status = issue.dimension(function(d) { return d.status; });
-  var statuses = status.group();
-  var summary = issue.dimension(function(d) { return d.summary; });
-  var summaries = summary.group();
+  var issuesCf = crossfilter(issues);
+
+  // create a dimension based on the created_at date
+  var issuesByDate = issuesCf.dimension(function(d) { return d.created_at; });
+
+  // groups all issues with the same date into buckets.
+  // bucket (actually an object), has a key prop which is the created_at date
+  // and a value prop that is the number of issues created on that date
+  var issueGroupsByDate = issuesByDate.group(d3.time.day);
+
+  // var issuesByStatus = issuesCf.dimension(function(d) { return d.status; });
+  // var statuses = status.group();
+  // var issuesBySummary = issuesCf.dimension(function(d) { return d.summary; });
+  // var summaries = summary.group();
   // how do I sort this grouping by date?
-  // console.log(dates.top(30)); 
-  // console.log(statuses.top(10));
+  console.log("last 30", issueGroupsByDate.top(30));
+  // console.log(statuses.top(10)); 
   // console.log(summaries.top(10));
-  barChart(dates.top(30)); */
+  barChart(issueGroupsByDate.top(30));
 }
 
 function barChart(dataset) {
-  console.log("barChart dataset", dataset);
+  // console.log("barChart dataset", dataset);
 //Width and height
   var margin = {top: 10, right: 10, bottom: 25, left: 30};
   var w = 700 - margin.left - margin.right;
@@ -183,7 +183,8 @@ function barChart(dataset) {
 
   // Scales and Axes
   var x = d3.time.scale()
-    .domain([new Date(2013, 10, 17), new Date(2013, 11, 17)])
+    .domain([dataset[dataset.length - 1].key, dataset[0].key])
+    .nice(d3.time.day)
     .rangeRound([0, w]);
 
   var y = d3.scale.linear()
