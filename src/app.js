@@ -3,20 +3,34 @@
 
 var bs = {
   config: {
+    $container: $('#container-main'),
+    $timeline: $('#timeline'),
     scf_list_url: [
-      "http://seeclickfix.com/api/issues.json?",
+      "http://seeclickfix.com/api/v2/issues?",
       "lat=37.7953637",
       "&lng=-122.2711137",
       "&zoom=10",
       "&start=720",
       "&end=0",
       "&page=1",
-      "&num_results=1000",
+      "&num_results=10",
       "&search=illegal+dumping",
       "&sort=issues.created_at",
       "&callback=?"
     ],
     $issue_tooltip: $('#issue-tooltip'),
+    spinner: [
+      '<div>',
+      '<div class="ui-spinner">',
+      '<span class="side side-left">',
+      '<span class="fill"></span>',
+      '</span>',
+      '<span class="side side-right">',
+      '<span class="fill"></span>',
+      '</span>',
+      '</div>',
+      '</div>'
+    ]
   },
 
   getIssues: function() {
@@ -25,6 +39,8 @@ var bs = {
 };
 
 var initialize = function() {
+  bs.config.$timeline.hide();
+  // bs.showHideSpinner();
   var issues = null;
   var mapOptions = {
     center: new google.maps.LatLng(37.7953637, -122.2711137),
@@ -33,8 +49,8 @@ var initialize = function() {
   var map = new google.maps.Map(document.getElementById("map-canvas"),
     mapOptions);
   var gettingIssues = bs.getIssues();
-
   gettingIssues.then(function(data) {
+    console.log(data);
     issues = data;
     addIssuesToCrossfilter(issues);
     addIssues(map, issues);
@@ -50,13 +66,13 @@ function addIssues(map, issues) {
   var overlay = new google.maps.OverlayView();
 
   // Add the container when the overlay is added to the map.
-  console.log(issues);
+  // console.log(issues);
   overlay.onAdd = function() {
     var layer = d3.select(this.getPanes().overlayImage).append("div")
       .attr("class", "issues");
 
     overlay.draw = function() {
-      console.log("draw method called", this);
+      // console.log("draw method called", this);
 
       var projection = this.getProjection(),
         padding = 10;
@@ -83,7 +99,7 @@ function addIssues(map, issues) {
       // the draw method.
       // ----------------------------------------------------------------------
       var circles = d3.selectAll("svg");
-      console.log(circles);
+      // console.log(circles);
       circles.on("click", function(d) {
         var issueTemplate = Handlebars.compile(bs.config.$issue_tooltip.html());
         var tmpl = issueTemplate({
@@ -92,12 +108,12 @@ function addIssues(map, issues) {
           created_at: d.value.created_at
         });
         // remove previous template if present
-        $('.issue-details').remove(); 
+        $('.issue-details').remove();
 
         // Can I add tooltips to overlay via jquery?
         // wam: YES!!!!!!
         $('.issues').append(tmpl);
-        console.log(d3.select(".issue-details").style("top"));
+        // console.log(d3.select(".issue-details").style("top"));
 
         // more hacky ass code
         // --------------------------------------------------------------------
@@ -106,9 +122,9 @@ function addIssues(map, issues) {
         // --------------------------------------------------------------------
         d3.select(".issue-details")
           .style("left", (pixels.x - 125) + "px")
-          .style("top",  (pixels.y - 100) + "px")
+          .style("top",  (pixels.y - 160) + "px")
           .classed("hidden", false);
-        console.log("I've been clicked!", d);
+        // console.log("I've been clicked!", d);
       }); // end of marker onclick handler
       // ----------------------------------------------------------------------
       function transform(d) {
@@ -126,9 +142,18 @@ function addIssues(map, issues) {
 }
 
 function addIssuesToCrossfilter(issues) {
+  // console.log("addIssuesToCrossfilter", issues);
+
+  // why am I performing this datetime conversion?
+  // format of issue.created_at property is a string (02/13/2014 - 09:45PM)
+  // what timezone is seeclickfix using when making this date to string conversion??
+  // TODO: investigate the timezone seeclickfix is using
+
+
   var ymdFormat = d3.time.format("%m/%d/%Y - %I:%M%p");
-  console.log(ymdFormat.parse(issues[0].created_at));
-  issues.forEach(function(i) {
+  console.log("issue date", ymdFormat.parse(issues[0].created_at));
+  
+  /* issues.forEach(function(i) {
     i.created_at = ymdFormat.parse(i.created_at);
     i.updated_at = ymdFormat.parse(i.updated_at);
   });
@@ -145,21 +170,21 @@ function addIssuesToCrossfilter(issues) {
   // console.log(dates.top(30)); 
   // console.log(statuses.top(10));
   // console.log(summaries.top(10));
-  barChart(dates.top(30));
-};
+  barChart(dates.top(30)); */
+}
 
 function barChart(dataset) {
-  console.log(dataset);
+  console.log("barChart dataset", dataset);
 //Width and height
   var margin = {top: 10, right: 10, bottom: 25, left: 30};
-  var w = 800 - margin.left - margin.right;
+  var w = 700 - margin.left - margin.right;
   var h = 120 - margin.top - margin.bottom;
-  var barPadding = 1;
+  var barPadding = 2;
 
   // Scales and Axes
   var x = d3.time.scale()
     .domain([new Date(2013, 10, 17), new Date(2013, 11, 17)])
-    .rangeRound([0, w])
+    .rangeRound([0, w]);
 
   var y = d3.scale.linear()
     .domain([0, d3.max(dataset, function(d) { return d.value; })])
@@ -171,7 +196,7 @@ function barChart(dataset) {
 
   var yAxis = d3.svg.axis()
       .scale(y)
-      .orient("left")
+      .orient("left");
   
   //Create SVG element
   var svg = d3.select("#timeline").append("svg")
@@ -179,8 +204,6 @@ function barChart(dataset) {
     .attr("height", h + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-
 
   // x-axis
   svg.append("g")
@@ -193,13 +216,14 @@ function barChart(dataset) {
   svg.append("g")
       .attr("class", "y axis")
       .attr("transform", "translate(" + yPadding + ",0)")
-      .call(yAxis)
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Issues Reported");
+      .call(yAxis);
+
+  svg.append("text")
+    .attr("x", 40)
+    .attr("y", 10)
+    .attr("font-family", "Helvetica")
+    .attr("font-size", "13")
+    .text("Number of Illegal Dumping Issues Reported To SeeClickFix");
 
   svg.selectAll(".bar")
       .data(dataset)
@@ -210,43 +234,9 @@ function barChart(dataset) {
       .attr("y", function(d) { return y(d.value); })
       .attr("height", function(d) { return h - y(d.value); });
 
+  bs.config.$timeline.fadeIn();
+
 }
-
-
-//Width and height
-      var w = 500;
-      var h = 100;
-      var barPadding = 1;
-      
-      var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
-              11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
-      
-      //Create SVG element
-      var svg = d3.select("body")
-            .append("svg")
-            .attr("width", w)
-            .attr("height", h);
-
-      svg.selectAll("rect")
-         .data(dataset)
-         .enter()
-         .append("rect")
-         .attr("x", function(d, i) {
-            return i * (w / dataset.length);
-         })
-         .attr("y", function(d) {
-            return h - (d * 4);
-         })
-         .attr("width", w / dataset.length - barPadding)
-         .attr("height", function(d) {
-            return d * 4;
-         })
-         .attr("fill", "teal");
-
-
-
-
-
 
 
 

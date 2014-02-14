@@ -40,7 +40,7 @@ h2 {
 }
 
 .issues circle {
-  fill: rgba(211, 84, 0,0.8);
+  fill: rgba(211, 84, 0,0.8);    /* rgba(142, 68, 173,1.0) */
   stroke: rgba(192, 57, 43, 1.0);
   stroke-width: 2px; 
 }
@@ -51,6 +51,9 @@ h2 {
 
 .hidden {
   display: none;
+}
+.visible {
+  display: block;
 }
 
 .issue-tooltip {
@@ -70,7 +73,9 @@ h2 {
   font-size: 14px;
   color: #666;
   padding: 0 13px 0 13px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.33)
 }
+
 .issue-details p {
   max-width: 100%;
   margin: 8px 0;
@@ -90,14 +95,14 @@ h2 {
   top: 650px;
   left: 45px;
   background-color: rgba(255, 255, 255, 0.9);
-  width: 840px;
+  width: 740px;
   height: 120px;
   border-radius: 2px;
   display: block;
 }
 
 .bar {
-  fill: steelblue;
+  fill: hsla(168, 76%, 36%, 0.8);
 }
 
 .bar:hover {
@@ -111,7 +116,7 @@ h2 {
 .axis path,
 .axis line {
   fill: none;
-  stroke: #000;
+  stroke: #999;
   shape-rendering: crispEdges;
 }
 
