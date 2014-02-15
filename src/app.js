@@ -5,6 +5,7 @@ var bs = {
   config: {
     $container: $('#container-main'),
     $timeline: $('#timeline'),
+    // TODO: convert scf_list_url to an object to make config easier
     scf_list_url: [
       "http://seeclickfix.com/api/v2/issues?",
       "lat=37.7953637",
@@ -35,8 +36,41 @@ var bs = {
   },
 
   getIssues: function() {
-    return $.getJSON(bs.config.scf_list_url.join(""));
-  },
+    // Seeclickfix's api only allows for up to 100 issues to be requested
+    // for any api call. This means I have to keep making calls until
+    // I have 30 days worth of issues.
+    var thirtyDaysFromToday = new Date(new Date() - 30*24*60*60*1000);
+    var d = jQuery.Deferred();
+    var issues = [];
+
+    var get100Issues = function(page, deferred) {
+      bs.config.scf_list_url[6] = "&page=" + page;
+
+      $.getJSON(bs.config.scf_list_url.join(""))
+        .done(function(data) {
+          // debugger;
+          issues = issues.concat(data.issues);
+          if (new Date(issues[issues.length - 1].created_at) <= thirtyDaysFromToday) {
+
+            // determine index of 30th day in issues array and slice
+            var issues30Days = _.filter(issues, function(issue) {
+              return new Date(issue.created_at) >= thirtyDaysFromToday;
+            });
+
+            // resolve the defered and pass in the augmented issues array.
+            deferred.resolve(issues30Days);
+          } else {
+            get100Issues(++page, deferred);
+          }
+        })
+        .fail(function(status) {
+          deferred.reject(status);
+        });
+    };
+
+    get100Issues(1, d);
+    return d.promise();
+  }
 };
 
 var initialize = function() {
@@ -52,7 +86,7 @@ var initialize = function() {
   var gettingIssues = bs.getIssues();
   gettingIssues.then(function(data) {
     console.log(data);
-    issues = data.issues;
+    issues = data;
     addIssuesToCrossfilter(issues);
     addIssues(map, issues);
   }, function() {
@@ -174,17 +208,25 @@ function addIssuesToCrossfilter(issues) {
 }
 
 function barChart(dataset) {
-  // console.log("barChart dataset", dataset);
+  console.log("barChart dataset", dataset);
 //Width and height
-  var margin = {top: 10, right: 10, bottom: 25, left: 30};
-  var w = 700 - margin.left - margin.right;
+  var margin = {top: 20, right: 30, bottom: 25, left: 30};
+  var w = 740 - margin.left - margin.right;
   var h = 120 - margin.top - margin.bottom;
   var barPadding = 2;
 
+  // the dataset is sorted by number of issues and not by date
+  var sortedDataset = dataset.sort(function(a, b) {
+    return a.key - b.key;
+  });
+
+  console.log(sortedDataset);
+
   // Scales and Axes
   var x = d3.time.scale()
-    .domain([dataset[dataset.length - 1].key, dataset[0].key])
-    .nice(d3.time.day)
+    .domain([dataset[0].key, dataset[dataset.length - 1].key])
+    // .domain([new Date(2013, 10, 16), new Date(2014, 1, 15)])
+    // .nice(d3.time.day)
     .rangeRound([0, w]);
 
   var y = d3.scale.linear()
@@ -220,8 +262,8 @@ function barChart(dataset) {
       .call(yAxis);
 
   svg.append("text")
-    .attr("x", 40)
-    .attr("y", 10)
+    .attr("x", 10)
+    .attr("y", 0)
     .attr("font-family", "Helvetica")
     .attr("font-size", "13")
     .text("Number of Illegal Dumping Issues Reported To SeeClickFix");
