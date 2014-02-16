@@ -36,6 +36,7 @@ var bs = {
   },
 
   getIssues: function() {
+
     // Seeclickfix's api only allows for up to 100 issues to be requested
     // for any api call. This means I have to keep making calls until
     // I have 30 days worth of issues.
@@ -94,9 +95,10 @@ var initialize = function() {
   });
 };
 
+
 google.maps.event.addDomListener(window, 'load', initialize);
 
-// Load the station data. When the data comes back, create an overlay.
+// Load  data. When the data comes back, create an overlay.
 function addIssues(map, issues) {
   var overlay = new google.maps.OverlayView();
 
@@ -109,6 +111,7 @@ function addIssues(map, issues) {
     overlay.draw = function() {
       // console.log("draw method called", this);
 
+      // TODO: understand the purpose of the projection and padding
       var projection = this.getProjection(),
         padding = 10;
 
@@ -122,7 +125,7 @@ function addIssues(map, issues) {
       // Add a circle.
       marker.append("svg:circle")
           .attr("opacity", 0.0)
-          .attr("r", 7)
+          .attr("r", 10)
           .attr("cx", padding)
           .attr("cy", padding)
           .transition()
