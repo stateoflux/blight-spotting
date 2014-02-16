@@ -32,16 +32,16 @@ h2 {
   position: absolute;
 }
 
+/* container for the issue marker */
 .issues svg {
-  width: 60px;
+  width: 20px;
   height: 20px;
-  padding-right: 100px;
-  font: 10px sans-serif;
+  /* debug: border: 1px solid #555; */
 }
 
 .issues circle {
   fill: rgba(231, 76, 60, 0.85);  /* rgba(211, 84, 0,0.8); */   
-  stroke: rgba(192, 57, 43, 1.0);
+  stroke: rgba(0, 0, 0, 0.2); /* rgba(231, 76, 60, 1.0); rgba(192, 57, 43, 1.0); */
   stroke-width: 1px; 
 }
 .issues circle:hover {

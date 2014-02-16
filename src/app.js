@@ -78,54 +78,66 @@ var initialize = function() {
   bs.config.$timeline.hide();
   // bs.showHideSpinner();
   var issues = null;
+
+  // TODO: refactor map creation logic into a function
   var mapOptions = {
     center: new google.maps.LatLng(37.7953637, -122.2711137),
     zoom: 13
   };
   var map = new google.maps.Map(document.getElementById("map-canvas"),
     mapOptions);
-  var gettingIssues = bs.getIssues();
-  gettingIssues.then(function(data) {
-    console.log(data);
-    issues = data;
-    addIssuesToCrossfilter(issues);
-    addIssues(map, issues);
-  }, function() {
-    console.log("Ajax error!");
-  });
+
+  // initiate AJAX call to seeclickfix api to request issues
+  // apply crossfilter to issue to group the number of issues by days
+  // create geo-visualization with issue data
+  bs.getIssues()
+    .then(function(data) {
+      console.log(data);
+      issues = data;
+      addIssuesToCrossfilter(issues);
+      addIssues(map, issues);
+    }, function() {
+      console.log("Ajax error!");
+    });
 };
 
-
+// On load event initialize the app
 google.maps.event.addDomListener(window, 'load', initialize);
 
-// Load  data. When the data comes back, create an overlay.
+// I'm creating a custom Google Map overlay (objects such as lines or markers) 
+// which is where I will add the D3 generated issue markers.
 function addIssues(map, issues) {
   var overlay = new google.maps.OverlayView();
 
-  // Add the container when the overlay is added to the map.
-  // console.log(issues);
+  // Google Map's API will call the onAdd and draw methods at appropriate
+  // times during the overlay object's init cycle.
+
+  // Attach the chart container to the overlayImage pane (panes are DOM nodes that
+  // specify the stacking order of map layers) once the overlay is added to the map.
   overlay.onAdd = function() {
     var layer = d3.select(this.getPanes().overlayImage).append("div")
       .attr("class", "issues");
 
+    // TODO: refactor out the marker generation logic
+    // Draw each marker as a separate SVG element.
     overlay.draw = function() {
-      // console.log("draw method called", this);
 
       // TODO: understand the purpose of the projection and padding
-      var projection = this.getProjection(),
-        padding = 10;
+      // Retrieve the overlay's MapCanvasProjection using getProjection() 
+      var projection = this.getProjection();
+      var padding = 10;
 
       var marker = layer.selectAll("svg")
-          .data(d3.entries(issues.slice(0,100)))
-          .each(transform) // up, issuesdate existing markers
-        .enter().append("svg:svg")
+          .data(d3.entries(issues.slice(0,100)))  // why am i using d3.entries here?
+          .each(transform)  // update existing markers (transform is defined below)
+        .enter().append("svg:svg")  // what is this syntax
           .each(transform)
           .attr("class", "marker");
 
       // Add a circle.
       marker.append("svg:circle")
           .attr("opacity", 0.0)
-          .attr("r", 10)
+          .attr("r", 9.5)
           .attr("cx", padding)
           .attr("cy", padding)
           .transition()
@@ -165,13 +177,19 @@ function addIssues(map, issues) {
         // console.log("I've been clicked!", d);
       }); // end of marker onclick handler
       // ----------------------------------------------------------------------
+
+      // 
       function transform(d) {
         d = new google.maps.LatLng(d.value.lat, d.value.lng);
+
+        // converts the issue's lat/lng value to a point on the screen
         d = projection.fromLatLngToDivPixel(d);
-        // console.log(d);
+        
+        // shift the marker svg container such that the pixel representing the lat/lng
+        // is centered within
         return d3.select(this)
-            .style("left", (d.x - padding) + "px")
-            .style("top", (d.y - padding) + "px");
+          .style("left", (d.x - padding) + "px")
+          .style("top", (d.y - padding) + "px");
       }
     }; // end of draw
   }; // end of onAdd
