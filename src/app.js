@@ -181,6 +181,7 @@ function addIssues(map, issues) {
         tooltip.style.top = pixel.y - tooltip.clientHeight - 25 + "px";
         tooltip.classList.remove("hidden");
 
+        // issue image viewer
         gettingIssueDetails
           .done(function(data) {
             console.log("issue detail", data.media.image_full);
