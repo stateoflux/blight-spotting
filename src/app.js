@@ -189,12 +189,14 @@ function addIssues(map, issues) {
             var issueDetailTemplate = Handlebars.compile(bs.config.$issue_image.html());
             var issueDetail = issueDetailTemplate({
               description: data.description,
-              imgUrl: "http://seeclickfix.com" + data.media.image_full
+              imgUrl: data.media.image_full
             });
 
             console.log("template", issueDetail);
             $('.issue-image-shell').remove();
-            $('#issue-detail').append(issueDetail);
+            $('#issue-detail')
+              .removeClass("hidden")
+              .append(issueDetail);
           })
           .fail(function(status) {
             console.log("issue request failed: " + status);

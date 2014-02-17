@@ -82,10 +82,6 @@ h2 {
   background-color: #f2f2f2;
 }
 
-.issue-details .issue-details-footer {
-  /*border-top: 1px solid #f2f2f2;*/
-}
-
 .created_at {
   font-weight: 300;
   font-size: 12px;
@@ -135,11 +131,14 @@ h2 {
   max-width: 100%;
   padding: 13px;
 }
-.issue-image-shell p {
+.issue-image-shell img.no-image {
+  width: 150px;
+  margin: 0 auto;
+}
+
+.issue-image-shell h4 {
   margin: 0;
   padding: 8px 13px;
-  font-size: 14px;
-  color: #666;
   border-top: 1px solid #eee;
 }
 

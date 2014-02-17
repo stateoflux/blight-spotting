@@ -40,10 +40,16 @@
       </script>
       <script id="issue-image" class="hidden" type="text/x-handlebars-template" >
         <div class="issue-image-shell">
-          <img src="{{imgUrl}}" />
+          {{#if imgUrl}}
+          <img src="http://seeclickfix.com{{imgUrl}}" />
+          {{else}}
+          <img class="no-image" src="public/images/icon_25683.png" />
+          <h4>No image available</h4>
+          {{/if}}
         </div>
+        
       </script>
-      <div id="issue-detail"></div>
+      <div id="issue-detail" class="hidden"></div>
       <div id="timeline"></div>
     </div>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIaQ1AgczP6-UZzndO35dXuCjvDu9NSmE&sensor=true"></script>
