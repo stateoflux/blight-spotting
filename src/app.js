@@ -178,7 +178,7 @@ function addIssues(map, issues) {
 
         var tooltip = document.querySelector(".issue-details");
         tooltip.style.left = pixel.x - 125 + "px";
-        tooltip.style.top = pixel.y - tooltip.clientHeight - 25 + "px";
+        tooltip.style.top = pixel.y - tooltip.clientHeight - 22 + "px";
         tooltip.classList.remove("hidden");
 
         // issue image viewer
