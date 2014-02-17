@@ -27,11 +27,24 @@
       <div id="map-canvas"></div>
       <script id="issue-tooltip" class="hidden" type="text/x-handlebars-template" >
         <div class="issue-details">
-          <p class="address">{{address}}</p>
-          <p class="desc">{{description}}</p>
-          <p class="created_at">Submitted {{created_at}}</p> 
+          <div class="issue-details-header">
+            <p class="address">{{address}}</p>
+          </div>
+          <div class="issue-details-body">
+            <p class="desc">{{description}}</p>
+          </div>
+          <div class="issue-details-footer">
+            <p class="created_at">Submitted {{created_at}}</p>
+          </div>
         </div>
       </script>
+      <script id="issue-image" class="hidden" type="text/x-handlebars-template" >
+        <div class="issue-image-shell">
+          <img src="{{imgUrl}}" />
+          <p class="desc">{{description}}</p>
+        </div>
+      </script>
+      <div id="issue-detail"></div>
       <div id="timeline"></div>
     </div>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIaQ1AgczP6-UZzndO35dXuCjvDu9NSmE&sensor=true"></script>

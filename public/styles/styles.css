@@ -56,40 +56,70 @@ h2 {
   display: block;
 }
 
-.issue-tooltip {
-  position: absolute;
-  background-color: #fff;
-  width: 275px;
-  border-radius: 2px;
-  margin-bottom: 14px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);  /* <offset-x> <offset-y> <blur-radius>? <spread-radius>? <color>? */
-}
+/* Tooltip styles
+ * ========================================================================== */
 .issue-details {
+  -moz-box-sizing: border-box; 
+  -webkit-box-sizing: border-box; 
+  box-sizing: border-box;
   position: absolute;
   background-color: #fff;
-  width: 255px;
+  width: 250px;
   border-radius: 2px;
   display: block;
   font-size: 14px;
   color: #666;
-  padding: 0 13px 0 13px;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.33)
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.33); /* <offset-x> <offset-y> <blur-radius>? <spread-radius>? <color>? */
 }
 
-.issue-details p {
-  max-width: 100%;
-  margin: 8px 0;
+.issue-details {
+  max-wdith: 100%;
 }
+.issue-details p {
+  margin: 0;
+  padding: 8px 13px;
+}
+.issue-details-header {
+  background-color: #f2f2f2;
+}
+
+
+
+.issue-details .issue-details-footer {
+  /*border-top: 1px solid #f2f2f2;*/
+}
+
 .created_at {
   font-weight: 300;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.4);
 }
 .address {
   color: hsla(193, 63%, 42%, 1);
 }
-.created_at {
-  color: rgba(0, 0, 0, 0.4);
+
+/* Issue image viewer styles
+ * ========================================================================== */
+#issue-detail {
+  position: absolute;
+  top: 8.5%;
+  left: 80.9%;
+  background-color: rgba(255, 255, 255, 0.9);
+  width: 300px;
+  min-height: 400px;
+  border-radius: 2px;
+  display: block;
+}
+.issue-image-shell {
+  max-width: 100%;
+  padding: 8px;
+}
+.issue-image-shell img {
+  max-width: 100%;
 }
 
+/* Timeline styles
+ * ========================================================================== */
 #timeline {
   position: absolute;
   top: 80%;

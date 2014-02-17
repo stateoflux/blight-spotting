@@ -21,6 +21,7 @@ var bs = {
       "&callback=?"
     ],
     $issue_tooltip: $('#issue-tooltip'),
+    $issue_image: $('#issue-image'),
     spinner: [
       '<div>',
       '<div class="ui-spinner">',
@@ -144,37 +145,61 @@ function addIssues(map, issues) {
           .duration(500)
           .attr("opacity", 1.0);
 
-      // Terribly hacky code!!!
       // wam: for some reason, the tooltip code only seems to work within
       // the draw method.
       // ----------------------------------------------------------------------
-      var circles = d3.selectAll("svg");
-      // console.log(circles);
-      circles.on("click", function(d) {
+      var markers = d3.selectAll("circle");
+
+      markers.on("click", function(d) {
+        var coords = null;
+        var pixel = null;
+
+        // request issue details
+        var gettingIssueDetails = $.getJSON("http://seeclickfix.com/api/v2/issues/" + d.value.id +
+          "?details=true&callback=?");
+          
         var issueTemplate = Handlebars.compile(bs.config.$issue_tooltip.html());
         var tmpl = issueTemplate({
           address: d.value.address,
           description: d.value.description,
-          created_at: d.value.created_at
+          created_at: d.value.created_at.toLocaleString("en-US", options)
         });
+
+        var options = {
+          weekday: "short", year: "numeric", month: "short", day: "numeric",
+          hour: "2-digit", minute: "2-digit"
+        };
+        
         // remove previous template if present
         $('.issue-details').remove();
-
-        // Can I add tooltips to overlay via jquery?
-        // wam: YES!!!!!!
         $('.issues').append(tmpl);
-        // console.log(d3.select(".issue-details").style("top"));
+        coords = new google.maps.LatLng(d.value.lat, d.value.lng);
+        pixel = projection.fromLatLngToDivPixel(coords);
 
-        // more hacky ass code
-        // --------------------------------------------------------------------
-        var coords = new google.maps.LatLng(d.value.lat, d.value.lng);
-        var pixels = projection.fromLatLngToDivPixel(coords);
-        // --------------------------------------------------------------------
-        d3.select(".issue-details")
-          .style("left", (pixels.x - 125) + "px")
-          .style("top",  (pixels.y - 160) + "px")
-          .classed("hidden", false);
-        // console.log("I've been clicked!", d);
+        var tooltip = document.querySelector(".issue-details");
+        tooltip.style.left = pixel.x - 125 + "px";
+        tooltip.style.top = pixel.y - tooltip.clientHeight - 25 + "px";
+        tooltip.classList.remove("hidden");
+
+        gettingIssueDetails
+          .done(function(data) {
+            console.log("issue detail", data.media.image_full);
+
+            var issueDetailTemplate = Handlebars.compile(bs.config.$issue_image.html());
+            var issueDetail = issueDetailTemplate({
+              description: data.description,
+              imgUrl: "http://seeclickfix.com" + data.media.image_full
+            });
+
+            console.log("template", issueDetail);
+            $('.issue-image-shell').remove();
+            $('#issue-detail').append(issueDetail);
+          })
+          .fail(function(status) {
+            console.log("issue request failed: " + status);
+          });
+
+
       }); // end of marker onclick handler
       // ----------------------------------------------------------------------
 
