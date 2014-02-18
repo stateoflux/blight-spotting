@@ -161,7 +161,7 @@ function addIssues(map, issues) {
         var issueTemplate = Handlebars.compile(bs.config.$issue_tooltip.html());
         var tmpl = issueTemplate({
           address: d.value.address,
-          description: d.value.description,
+          // description: d.value.description,
           created_at: d.value.created_at.toLocaleString("en-US", options)
         });
 
@@ -193,7 +193,7 @@ function addIssues(map, issues) {
             });
 
             console.log("template", issueDetail);
-            $('.issue-image-shell').remove();
+            $('.issue-details-image').remove();
             $('#issue-detail')
               .removeClass("hidden")
               .append(issueDetail);

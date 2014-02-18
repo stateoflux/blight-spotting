@@ -30,22 +30,22 @@
           <div class="issue-details-header">
             <p class="address">{{address}}</p>
           </div>
-          <div class="issue-details-body">
-            <p class="desc">{{description}}</p>
-          </div>
           <div class="issue-details-footer">
             <p class="created_at">Submitted {{created_at}}</p>
           </div>
         </div>
       </script>
       <script id="issue-image" class="hidden" type="text/x-handlebars-template" >
-        <div class="issue-image-shell">
+        <div class="issue-details-image">
           {{#if imgUrl}}
           <img src="http://seeclickfix.com{{imgUrl}}" />
           {{else}}
           <img class="no-image" src="public/images/icon_25683.png" />
           <h4>No image available</h4>
           {{/if}}
+          <div class="issue-details-desc">
+            <p class="desc">{{description}}</p>
+          </div>
         </div>
         
       </script>

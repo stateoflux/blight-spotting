@@ -120,26 +120,34 @@ h2 {
   border-radius: 2px;
   display: block;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.33);
+  color: #666;
+  font-size: 14px;
 }
-.issue-image-shell {
+.issue-details-image {
   max-width: 100%;
 }
-.issue-image-shell img {
+.issue-details-image img {
   -moz-box-sizing: border-box; 
   -webkit-box-sizing: border-box; 
   box-sizing: border-box;
   max-width: 100%;
   padding: 13px;
 }
-.issue-image-shell img.no-image {
+
+.issue-details-image img.no-image {
   width: 150px;
   margin: 0 auto;
 }
 
-.issue-image-shell h4 {
+.issue-details-image h4 {
   margin: 0;
   padding: 8px 13px;
-  border-top: 1px solid #eee;
+}
+
+.issue-details-image p {
+  border-top: 1px solid #ccc;
+  margin: 0;
+  padding: 8px 13px;
 }
 
 /* Timeline styles
